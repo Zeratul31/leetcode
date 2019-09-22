@@ -94,3 +94,83 @@ private:
         return result;
     }
 };
+
+//method 2: DFS + level limited:
+class Solution {
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        vector<vector<string> > res;
+        unordered_set <string> set;
+        for(auto item: wordList)
+            set.emplace(item);
+        set.emplace(beginWord);
+        
+        if(wordList.size()==0 || set.find(endWord)==set.end())  return res;
+        
+        unordered_map <string, vector<string> > neighbor;
+        unordered_map<string, int> distance;
+        wordList.push_back(beginWord);
+        
+        for(auto item: wordList){
+            neighbor_get(item, neighbor, set);
+            distance_get(item, endWord, distance);
+        }
+        
+        int limit = 1;
+        vector<string> path;
+        path.push_back(beginWord); // do not forget
+        
+        while(res.empty() && (limit<wordList.size() )  ){
+            dfs(limit, 1, beginWord, endWord, path, res, distance, neighbor);
+            limit++;
+        }
+        return res;
+    }
+    
+private:
+    void dfs(int limit, int cur_level, string word, string endWord, vector<string> &path, vector<vector<string> > &res, unordered_map<string, int> &distance, unordered_map <string, vector<string> > &neighbor){
+        if(cur_level==limit){
+            if(word == endWord)
+                res.push_back(path);
+            return;
+        }
+        
+        //if distance is larger than limit requirement then it cannot transfer within limit
+        if(distance[word] + cur_level > limit)    return;
+        
+        for(auto item: neighbor[word]){
+            path.push_back(item);
+            dfs(limit, cur_level+1, item, endWord, path, res, distance, neighbor);
+            path.pop_back();
+        }
+        
+        // hard part: if res is empty, it means the minimum distance is not enough!!
+        if(res.empty()){ // both works
+            // distance[word] = max(distance[word], limit - (cur_level-1) +1);
+            distance[word] = distance[word]+1 ;
+        }
+    }
+    
+    void neighbor_get(string input, unordered_map <string, vector<string> > &neighbor, unordered_set <string> &set){
+        vector<string> temp;
+        for(int i=0; i<input.size();i++){
+            string str = input;
+            for(int j=0; j<26; j++){
+                str[i] = 'a'+j;
+                if(str!=input && set.find(str)!=set.end()){
+                    temp.push_back(str);
+                }
+            }
+        }
+        neighbor.emplace(input,temp);
+    }
+    
+    void distance_get(string input, string endWord, unordered_map<string, int> &distance){
+        int diff=0;
+        for(int i=0; i<input.size();i++){
+            if(input[i]!=endWord[i])
+                diff++;
+        }
+        distance.emplace(input, diff);
+    } // this is for minmum requirement of steps/levels we need
+};
