@@ -36,7 +36,7 @@ public:
         string strs = input + spliter;
         int pos = strs.find(spliter);
         int size = input.size();
-        while(pos!= strs.nops){
+        while(pos!= strs.npos){
             string x = strs.substr(0, pos);
             res.push_back(x);
             strs = strs.substr(pos+1, size);
