@@ -1,4 +1,34 @@
-class Solution { // rainbow sort 
+class Solution { // use two points method and save space
+public:
+    void sortColors(vector<int>& nums) {
+        int pl = 0; // left point
+        int i = 0;
+        int pr = nums.size() - 1; // right point
+        
+        while (i <= pr){ // there are only three cases 0,1,2, so we can use if
+            if(nums[i] == 0){
+                swapp (nums, i, pl);
+                i++;
+                pl++;
+            }else if(nums[i] == 1){
+                i++;
+            }else{
+                swapp(nums, i, pr);
+                pr--;
+            }
+        }
+    }
+    
+private:
+    void swapp (vector<int>& nums, int a, int b){
+        int temp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = temp;
+    }
+};
+
+
+class Solution { // rainbow sort
 public:
     void sortColors(vector<int>& nums) {
         rainbow_sort(nums, 0, nums.size()-1, 0, 2);
