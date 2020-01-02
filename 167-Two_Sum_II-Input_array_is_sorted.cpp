@@ -1,3 +1,7 @@
+// method 1: enumerate left edge and right edge: O(n^2)
+// method 2: binary search method: O(nlogn)
+// method 3: two points method: O(n)
+
 class Solution {
 public:
     vector<int> twoSum(vector<int>& numbers, int target) {
