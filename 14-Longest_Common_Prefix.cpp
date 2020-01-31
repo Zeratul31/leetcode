@@ -1,15 +1,22 @@
+// method: 根据第一个字符串内容的顺序来遍历所有字符串的内容，出现不一样或者长度不够时就结束。
+// hard part: i > strs[j].size() - 1 OR i >= strs[j].size()
+// TC: O(n^2), SC: O(1) 
+
+
 class Solution {
 public:
     string longestCommonPrefix(vector<string>& strs) {
-        if(strs.size()==0)  return "";
-        // if(strs.size()==1)  return strs[0];
+        if(strs.size() == 0 || strs[0].size() == 0)
+            return "";
         
-        for(int j=0; j<strs[0].size();j++){
-            for(int i=0; i<strs.size();i++){
-                if(j>=strs[i].size() || strs[0][j]!=strs[i][j])
-                    return strs[0].substr(0,j);
+        string base = strs[0];
+        
+        for(int i = 0; i < base.size(); i++){
+            for(int j = 0; j < strs.size(); j++){
+                if(i > strs[j].size() - 1 || base[i] != strs[j][i]) // hard
+                    return base.substr(0, i);
             }
         }
-        return strs[0]; 
+        return base;
     }
 };
